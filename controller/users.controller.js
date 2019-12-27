@@ -2,6 +2,7 @@
 Standard Module use
  */
 var bcrypt=require('bcryptjs');
+var jwt=require('jsonwebtoken');
  /*
  User Defined module use
   */
@@ -11,6 +12,7 @@ var SMS=require('../utility/sms');
 const { check, validationResult,body } = require('express-validator');
 var middleware=require('../middleware/middleware');
 var utility=require('../utility/utility');
+var fileConfig=require('../config/config');
 var userController={};
 
 userController.register=(req,res)=>{
@@ -20,7 +22,7 @@ userController.register=(req,res)=>{
         return res.status(422).json({ errors: errors.array() });
     }
 
-  utility.hashCode(req.body.password).then((code)=>{
+  utility.hashCodeNew(req.body.password).then((code)=>{
     var users=new User({
       fullname:req.body.fullname,
       email:req.body.email,
@@ -45,8 +47,28 @@ userController.register=(req,res)=>{
 }
 
 userController.login=(req,res)=>{
-  var email=req.body.email;
-  var password=req.body.password;
-  
+  try{
+    var email=req.body.email;
+    var password=req.body.password;
+    utility.hashCodeNew(password).then((code)=>{
+      User.find({email:email,password:code}).count().then((result)=>{
+        console.log(result);
+        if(result){
+          var token=jwt.sign({email:email},fileConfig.jwt_secret.secret,{expiresIn:86400});
+          res.json({"status":200,"message":"User Verified Successfully","data":{"email":email,"token":token}});
+        }else{
+          res.json({"status":401,"message":"Email or password are incorrect"});
+        }
+      }).catch((error)=>{
+        res.json(error)
+      })
+  }).catch((errors)=>{
+    console.log(errors);
+  })
+  }
+  catch(ex){
+    res.json(ex);
+  }
 }
+
 module.exports=userController;

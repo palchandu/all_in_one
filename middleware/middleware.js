@@ -1,5 +1,7 @@
+var jwt=require('jsonwebtoken');
 var User=require('../model/users.model');
 var fileConfig=require('../config/config');
+
 var emailExists=function(req,res,next){
     var email=req.body.email;
     User.findOne({"email":email}).exec().then((users)=>{
@@ -20,7 +22,7 @@ var validRequest=function(req,res,next){
         return res.status(401).send({ auth: false, message: 'No token provided.' });
     }
     else{
-        jwt.verify(token,config.secret,function(err,decoded){
+        jwt.verify(token,fileConfig.jwt_secret.secret,function(err,decoded){
             if (err){ 
                 return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
             }else{
