@@ -21,6 +21,7 @@ var middleware=require('./middleware/middleware');
 //var home=require('./routes/home');
 var users=require('./routes/users.route');
 var category=require('./routes/category.route');
+var postComment=require('./routes/posts_comment.route');
 /*use the module */
 app.use(bodyparser.urlencoded({ limit: '50mb',extended: true }));
 app.use(bodyparser.json({limit: '50mb',extended: true}));
@@ -28,6 +29,7 @@ app.use(bodyparser.json({limit: '50mb',extended: true}));
 //app.use('/',home);
 app.use('/v2/user',users);
 app.use('/v2/category',middleware.validRequest,category);
+app.use('/v2/posts_comments',middleware.validRequest,postComment);
 var port=8900;
 app.listen(port,()=>{
     console.log('Application running on port '+port);
