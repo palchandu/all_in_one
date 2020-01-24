@@ -21,4 +21,11 @@ Routes.get('/post_detail/:title',postCommentController.fetchSinglePost);
 Routes.post('/post_update',postCommentController.update_post);
 /*Delete Post */
 Routes.post('/post_delete',postCommentController.delete_post);
+/*Update Comment */
+Routes.post('/update_comment',[body('comment_content').notEmpty().withMessage('Comment can not be empty').isLength({ min: 2 }).withMessage('Comment must be at least 2 chars long').trim(),
+body('uid').notEmpty().withMessage('User id can not be empty').trim(),
+body('post_id').notEmpty().withMessage('Post id can not be empty').trim()
+],postCommentController.update_comment);
+/*Delete Comment */
+Routes.post('/delete_comment',postCommentController.delete_comment);
 module.exports=Routes;

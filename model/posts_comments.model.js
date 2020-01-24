@@ -11,6 +11,7 @@ var postSchema=new mongoose.Schema({
     title:{type:String,required:true},
     title_slug:{type:String,required:true},
     post_content:{type:String,required:true},
+    post_category:{type:mongoose.Schema.ObjectId,ref:'category'},
     comments:[commentSchema],
     posted_by:{type:mongoose.Schema.Types.ObjectId,ref:'Users'},
     meta_data:MetaData.meta_data
