@@ -9,7 +9,7 @@ categoryController.add_category=(req,res)=>{
         var categ=new categoryModel({
             name:category,
             slug:slug,
-            meta_data:{"created_by":1}
+            meta_data:{"created_by":req.body.created_by}
         })
         categoryModel.find({"slug":slug}).count().exec().then((response)=>{
             if(response==0){

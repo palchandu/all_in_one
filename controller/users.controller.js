@@ -52,12 +52,12 @@ userController.login=(req,res)=>{
     var password=req.body.password;
     utility.hashCodeNew(password).then((code)=>{
       User.find({email:email,password:code}).count().then((result)=>{
-        console.log(result);
+        console.log('----',result);
         if(result){
           var token=jwt.sign({email:email},fileConfig.jwt_secret.secret,{expiresIn:86400});
-          res.json({"status":200,"message":"User Verified Successfully","data":{"email":email,"token":token}});
+          res.json({"status":200,"success":true,"message":"User Verified Successfully","data":{"email":email,"token":token}});
         }else{
-          res.json({"status":401,"message":"Email or password are incorrect"});
+          res.json({"status":200,"success":false,"message":"Email or password are incorrect"});
         }
       }).catch((error)=>{
         res.json(error)

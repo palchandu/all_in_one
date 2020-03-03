@@ -1,5 +1,6 @@
 var bcrypt=require('bcryptjs');
 const crypto = require('crypto');
+var moment = require('moment');
 var utilityObject={};
 utilityObject.hashCode=(value)=>{
     return new Promise((resolve,reject)=>{
@@ -24,5 +25,8 @@ utilityObject.hashCodeNew=(value)=>{
         resolve(encrypted)
     }
     });
+}
+utilityObject.unixTimeStamp=()=>{
+    return moment.now();
 }
 module.exports=utilityObject;

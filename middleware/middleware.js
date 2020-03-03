@@ -18,13 +18,14 @@ var emailExists=function(req,res,next){
 
 var validRequest=function(req,res,next){
     var token = req.headers['x-access-token'];
+    console.log('token',token)
     if (!token){ 
-        return res.status(401).send({ auth: false, message: 'No token provided.' });
+        return res.status(200).send({ auth: false, message: 'No token provided.' });
     }
     else{
         jwt.verify(token,fileConfig.jwt_secret.secret,function(err,decoded){
             if (err){ 
-                return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                return res.status(200).send({ auth: false, message: 'Failed to authenticate token.' });
             }else{
                 next();
             }
