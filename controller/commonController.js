@@ -44,7 +44,8 @@ commonController.upload_image=function(req,res){
                         resultObject._id=result._id;
                         resultObject.imageName=result.imageName;
                         resultObject.imagePath=result.imagePath;
-                        res.json({message:"Successfully file uploaded",files:resultObject});
+                        //res.json({message:"Successfully file uploaded",files:resultObject});
+                        res.send(result.imagePath);
                 }).catch((error)=>{
                     console.log(error);
                 });
@@ -92,10 +93,10 @@ commonController.multiple_image_upload=async function(req,res){
 }
 
 commonController.getImage=function(req,res){
-    commomModel.Gallery.find({"meta_data.deleted":'N'},'imagePath').then((result)=>{
-        res.json({status:200,data:result});
+    commomModel.Gallery.find({},'imagePath').then((result)=>{
+        res.json({status:200,success:true,data:result});
     }).catch((error)=>{
-        res.json({status:201,data:error});
+        res.json({status:201,success:false,data:error});
     })
 }
 commonController.getSingleImage=function(req,res){

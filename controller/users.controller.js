@@ -51,11 +51,11 @@ userController.login=(req,res)=>{
     var email=req.body.email;
     var password=req.body.password;
     utility.hashCodeNew(password).then((code)=>{
-      User.find({email:email,password:code}).count().then((result)=>{
+      User.findOne({email:email,password:code}).then((result)=>{
         console.log('----',result);
-        if(result){
+        if(result!=null){
           var token=jwt.sign({email:email},fileConfig.jwt_secret.secret,{expiresIn:86400});
-          res.json({"status":200,"success":true,"message":"User Verified Successfully","data":{"email":email,"token":token}});
+          res.json({"status":200,"success":true,"message":"User Verified Successfully","data":{"email":email,"token":token,"uid":result._id}});
         }else{
           res.json({"status":200,"success":false,"message":"Email or password are incorrect"});
         }

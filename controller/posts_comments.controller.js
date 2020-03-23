@@ -6,29 +6,31 @@ var ObjectId = require('mongodb').ObjectID;
 post_comment_controller.post_blog=(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(200).json({ errors: errors.array() });
     }
     var title=req.body.title;
+    var category=req.body.category;
     var titleSlug=title.split(' ').join('_');
     var postData=new PostComment({
         title:title,
         title_slug:titleSlug,
         post_content:req.body.post_content,
+        post_category:category,
         posted_by:req.body.uid,
         meta_data:{"created_by":req.body.uid,"created":Date.now()}
     });
     PostComment.find({"title_slug":titleSlug}).count().exec().then((response)=>{
         if(response==0){
             postData.save().then((result)=>{
-                res.status(200).json({status:200,message:"Post created successfully",data:result});
+                res.status(200).json({status:200,success:true,message:"Post created successfully",data:result});
             }).catch((error)=>{
-                res.status(400).json({status:400,message:error});
+                res.status(400).json({status:400,success:false,message:error});
             })
         }else{
-            res.status(200).json({status:200,message:"Please change the title"});
+            res.status(200).json({status:200,success:false,message:"Please change the title"});
         }
     }).catch((error)=>{
-        res.status(400).json({status:400,message:error});
+        res.status(400).json({status:400,success:false,message:error});
     })
 }
 post_comment_controller.add_comment=(req,res)=>{
@@ -60,7 +62,7 @@ post_comment_controller.add_comment=(req,res)=>{
 
 post_comment_controller.allPosts=(req,res)=>{
     var condition={"meta_data.deleted":"N"};
-    PostComment.find(condition,{comments:0}).sort({ "meta_data.created" : -1}).exec().then((reponse)=>{
+    PostComment.find(condition).sort({ "meta_data.created" : -1}).exec().then((reponse)=>{
         res.status(200).json({success:true,message:"Post Details.",data:reponse});
         //res.json(reponse)
     }).catch((error)=>{
@@ -70,11 +72,15 @@ post_comment_controller.allPosts=(req,res)=>{
 
 post_comment_controller.fetchSinglePost=(req,res)=>{
     var title=req.params.title;
+    console.log('==0988',title);
+    if(title!=undefined && title!=''){
     var titleSlug=title.split(' ').join('_');
+    console.log('Slug',titleSlug);
     var condition={"meta_data.deleted":"N","title_slug":titleSlug};
     async.waterfall([
             function(callback){
-                PostComment.findOne(condition,{"_id":1}).exec().then((resp)=>{
+                PostComment.findOne(condition,{"_id":1,"comments":1}).exec().then((resp)=>{
+                    console.log('popopop',resp)
                     if(resp!=null){
                         callback('',resp);
                     }else{
@@ -87,10 +93,17 @@ post_comment_controller.fetchSinglePost=(req,res)=>{
             },
             function(arg,callback){
                 if(arg!=null && arg!=undefined){
-                   // console.log('------',arg);
+                   //console.log('------',arg);
+                   console.log('llllleee',arg.comments.length);
+                   if(arg.comments.length>0){
                     var post_cond={"_id":arg._id,"comments":{$elemMatch:{"meta_data.deleted":"N"}}};
+                   }else{
+                    var post_cond={"_id":arg._id};
+                   }
+                    
                     console.log(post_cond);
                     PostComment.findOne(post_cond).exec().then((reponse)=>{
+                        console.log('oiuyy',reponse.comments.length)
                         var sortedComment=reponse.comments.sort( function ( a, b ) { return b.meta_data.created - a.meta_data.created; } );
                         reponse.comments=sortedComment;
                          if(reponse!=null){
@@ -117,11 +130,14 @@ post_comment_controller.fetchSinglePost=(req,res)=>{
         (error,response)=>{
             if(error){
                 //console.log('oooooooooo',error);
-                res.status(200).json({success:true,message:response,data:error});
+                res.status(200).json({success:false,message:response,data:error});
             }else{
                 res.status(200).json({success:true,message:"Post Details.",data:response});
             }
         })
+    }else{
+        res.status(200).json({success:false,message:'Title is missing',data:''});
+    }
 }
 
 post_comment_controller.update_post=(req,res)=>{
@@ -129,16 +145,18 @@ post_comment_controller.update_post=(req,res)=>{
     var title=req.body.title;
     var titleSlug=title.split(' ').join('_');
     var post_content=req.body.post_content;
+    var category=req.body.category;
     condition={"meta_data.deleted":"N","_id":post_id};
     updtDoc={
         title:title,
         title_slug:titleSlug,
         post_content:post_content,
+        post_category:category,
         "meta_data.updated_by":req.body.uid,
         "meta_data.updated":Date.now(),
     };
     PostComment.update(condition,{$set:updtDoc}).exec().then((resp)=>{
-        res.status(200).json({success:true,message:"Post Details.",data:resp});
+        res.status(200).json({success:true,message:"Post Updated Successfully.",data:resp});
     }).catch((err)=>{
         res.status(200).json({success:false,message:"No post found.",data:err});
     })

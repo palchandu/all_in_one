@@ -34,6 +34,8 @@ var commonRouter=require('./routes/common');
 /*use the module */
 app.use(bodyparser.urlencoded({ limit: '50mb',extended: true }));
 app.use(bodyparser.json({limit: '50mb',extended: true}));
+app.use(express.static('public'));
+app.use('/images', express.static(__dirname + '/images'));
 /*routes use */
 //app.use('/',home);
 app.use('/v2/user',users);
