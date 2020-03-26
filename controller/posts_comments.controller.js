@@ -1,6 +1,7 @@
 var async=require('async');
 const { body,sanitizeBody,validationResult } = require('express-validator');
 var PostComment=require('../model/posts_comments.model');
+var moment=require('moment');
 var post_comment_controller={};
 var ObjectId = require('mongodb').ObjectID;
 post_comment_controller.post_blog=(req,res)=>{
@@ -17,7 +18,7 @@ post_comment_controller.post_blog=(req,res)=>{
         post_content:req.body.post_content,
         post_category:category,
         posted_by:req.body.uid,
-        meta_data:{"created_by":req.body.uid,"created":Date.now()}
+        meta_data:{"created_by":req.body.uid}
     });
     PostComment.find({"title_slug":titleSlug}).count().exec().then((response)=>{
         if(response==0){
@@ -60,7 +61,7 @@ post_comment_controller.add_comment=(req,res)=>{
     }
 }
 
-post_comment_controller.allPosts=(req,res)=>{
+/*post_comment_controller.allPosts=(req,res)=>{
     var condition={"meta_data.deleted":"N"};
     PostComment.find(condition).sort({ "meta_data.created" : -1}).exec().then((reponse)=>{
         res.status(200).json({success:true,message:"Post Details.",data:reponse});
@@ -69,7 +70,31 @@ post_comment_controller.allPosts=(req,res)=>{
         res.status(400).json({message:error});
     })
 }
-
+*/
+post_comment_controller.allPosts=(req,res)=>{
+    var condition={"meta_data.deleted":"N"};
+    PostComment.find(condition).populate('post_category').populate('meta_data.created_by').sort({ "meta_data.created" : -1}).exec().then((reponse)=>{
+        var objectArray=[];
+        for (let index = 0; index < reponse.length; index++) {
+            var objectData={};
+            var element = reponse[index];
+            console.log(element)
+            var createdDt=moment.unix(element.meta_data.created).format("YYYY-MM-DD")
+            objectData._id=element._id;
+            objectData.title=element.title;
+            objectData.post_content=element.post_content;
+            objectData.created_by=element.meta_data.created_by.fullname;
+            objectData.created=createdDt;
+            objectData.post_category=element.post_category;
+            objectArray.push(objectData);
+            
+        }
+        res.status(200).json({success:true,message:"Post Details.",data:objectArray});
+        //res.json(reponse)
+    }).catch((error)=>{
+        res.status(400).json({message:error});
+    })
+}
 post_comment_controller.fetchSinglePost=(req,res)=>{
     var title=req.params.title;
     console.log('==0988',title);

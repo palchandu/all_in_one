@@ -38,7 +38,7 @@ commonController.upload_image=function(req,res){
                 var gallery=new commomModel.Gallery({
                     imageName:mediaName,
                     imagePath:mediaSource,
-                    //meta_data:{ created_by:'12345'}
+                    meta_data:{created:Date.now()}
                    });
                 gallery.save().then((result)=>{
                         resultObject._id=result._id;
@@ -93,7 +93,7 @@ commonController.multiple_image_upload=async function(req,res){
 }
 
 commonController.getImage=function(req,res){
-    commomModel.Gallery.find({},'imagePath').then((result)=>{
+    commomModel.Gallery.find({},'imagePath').sort({'meta_data.created': 'desc'}).then((result)=>{
         res.json({status:200,success:true,data:result});
     }).catch((error)=>{
         res.json({status:201,success:false,data:error});
