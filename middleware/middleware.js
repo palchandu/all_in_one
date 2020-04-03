@@ -20,13 +20,17 @@ var validRequest=function(req,res,next){
     var token = req.headers['x-access-token'];
     console.log('token',token)
     if (!token){ 
+        console.log('no token',token)
         return res.status(200).send({ auth: false, message: 'No token provided.' });
+        
     }
     else{
         jwt.verify(token,fileConfig.jwt_secret.secret,function(err,decoded){
             if (err){ 
+                console.log('Failed to authenticate token.',token)
                 return res.status(200).send({ auth: false, message: 'Failed to authenticate token.' });
             }else{
+                console.log('success')
                 next();
             }
     

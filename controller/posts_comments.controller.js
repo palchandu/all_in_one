@@ -73,19 +73,20 @@ post_comment_controller.add_comment=(req,res)=>{
 */
 post_comment_controller.allPosts=(req,res)=>{
     var condition={"meta_data.deleted":"N"};
-    PostComment.find(condition).populate('post_category').populate('meta_data.created_by').sort({ "meta_data.created" : -1}).exec().then((reponse)=>{
+    PostComment.find(condition).populate('post_category').populate('meta_data.created_by').sort({'meta_data.created': -1}).then((reponse)=>{
         var objectArray=[];
         for (let index = 0; index < reponse.length; index++) {
             var objectData={};
             var element = reponse[index];
             console.log(element)
-            var createdDt=moment.unix(element.meta_data.created).format("YYYY-MM-DD")
+            var createdDt=moment.unix(element.meta_data.created).format("DD-MM-YYYY")
             objectData._id=element._id;
             objectData.title=element.title;
             objectData.post_content=element.post_content;
             objectData.created_by=element.meta_data.created_by.fullname;
             objectData.created=createdDt;
             objectData.post_category=element.post_category;
+            objectData.comments=element.comments;
             objectArray.push(objectData);
             
         }
@@ -192,11 +193,11 @@ post_comment_controller.delete_post=(req,res)=>{
     condition={"meta_data.deleted":"N","_id":post_id};
     updtDoc={
         "meta_data.updated_by":req.body.uid,
-        "meta_data.updated":Date.now(),
+        "meta_data.updated":moment().unix(),
         "meta_data.deleted":"Y"
     };
     PostComment.update(condition,{$set:updtDoc}).exec().then((resp)=>{
-        res.status(200).json({success:true,message:"Post Details.",data:resp});
+        res.status(200).json({success:true,message:"Post Deleted.",data:resp});
     }).catch((err)=>{
         res.status(200).json({success:false,message:"No post found.",data:err});
     })
