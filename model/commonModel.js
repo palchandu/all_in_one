@@ -1,7 +1,7 @@
 var mongoose=require('mongoose');
 var Schema=mongoose.Schema;
 var subDocs=require('./common.model');
-
+var myWebsiteData=require('./subDocs.model');
 var gallerySchema=new Schema({
     imageName:{ type:String,required:true},
     imagePath:{ type:String,required:true},
@@ -28,13 +28,24 @@ var states=new Schema({
     metaData:metaData
 });
 
+/*All Website Data */
+var mywebsite=new Schema({
+    home:myWebsiteData.home_data,
+    about:myWebsiteData.about_data,
+    service:myWebsiteData.service_data,
+    education_experience:myWebsiteData.education_experience_data,
+    work:myWebsiteData.portfolio_data,
+    website_logo:{type:String},
+    footer_data:{type:String},
+    social_icons:myWebsiteData.social_icons
+})
 
-
-
+var websiteInfo=mongoose.model('websiteinfo',mywebsite);
 module.exports={
     metaData:metaData,
     states:states,
     cities:cities,
-    Gallery:Gallery
+    Gallery:Gallery,
+    websiteInfo:websiteInfo
 }
 
