@@ -14,7 +14,7 @@ var skillsPercent=new mongoose.Schema({
 /*Service Set  Schema*/
 var serviceSet=new mongoose.Schema({
     service_icon:{type:String},
-    service_name:{type:Number},
+    service_name:{type:String},
     about_service:{type:String}
 });
 
@@ -22,13 +22,13 @@ var serviceSet=new mongoose.Schema({
 var educationSet=new mongoose.Schema({
     year_between:{type:String},
     institute_name:{type:String},
-    about_education:{type:Number}
+    about_education:{type:String}
 });
 /*Experience Set */
 var experinceSet=new mongoose.Schema({
     year_between:{type:String},
     company_name:{type:String},
-    about_experience:{type:Number}
+    about_experience:{type:String}
 });
 /*Work Image Slide Set */
 var workImage=new mongoose.Schema({

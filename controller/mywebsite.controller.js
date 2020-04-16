@@ -329,5 +329,207 @@ myWebsiteObject.manage_about_skills=function(req,res){
 
 }
 
+/*Add Service Page  title */
+myWebsiteObject.manage_service_title=function(req,res){
+    var service_title=req.body.service_title;
+    var obj={
+             'service_title':service_title,
+         }
+    MySchema.websiteInfo.findOne({}).select('service').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'service':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'service.service_title':service_title}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Service Page  Intro */
+myWebsiteObject.manage_service_intro=function(req,res){
+    var service_intro=req.body.service_intro;
+    var obj={
+             'service_intro':service_intro,
+         }
+    MySchema.websiteInfo.findOne({}).select('service').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'service':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'service.service_intro':service_intro}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Service Page Services Add */
+myWebsiteObject.manage_service_services=function(req,res){
+    var services=req.body.services;
+    var obj={
+             'service_set':services,
+         }
+    MySchema.websiteInfo.findOne({}).select('service').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'service':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$push:{'service.service_set':services}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Education and Experience Page  title */
+myWebsiteObject.manage_education_experience_title=function(req,res){
+    var education_service_title=req.body.education_service_title;
+    var obj={
+             'education_service_title':education_service_title,
+         }
+    MySchema.websiteInfo.findOne({}).select('education_experience').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'serveducation_experienceice':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'education_experience.education_service_title':education_service_title}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Education_Experience  Intro */
+myWebsiteObject.manage_education_experience_intro=function(req,res){
+    var education_service_intro=req.body.education_service_intro;
+    var obj={
+             'education_service_intro':education_service_intro,
+         }
+    MySchema.websiteInfo.findOne({}).select('education_experience').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'education_experience':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'education_experience.education_service_intro':education_service_intro}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Education_Expeince Educations */
+myWebsiteObject.manage_educations=function(req,res){
+    var educations=req.body.educations;
+    var obj={
+             'education_set':educations,
+         }
+    MySchema.websiteInfo.findOne({}).select('education_experience').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'education_experience':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'education_experience.education_set':educations}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Education_Expeince Experince */
+myWebsiteObject.manage_experiences=function(req,res){
+    var experiences=req.body.experiences;
+    var obj={
+             'experience_set':experiences,
+         }
+    MySchema.websiteInfo.findOne({}).select('education_experience').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'education_experience':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'education_experience.experience_set':experiences}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
 
 module.exports=myWebsiteObject;

@@ -22,4 +22,18 @@ router.post('/manage_about_working_area',mywebsiteController.manage_about_workin
 router.post('/manage_about_details',mywebsiteController.manage_about_details);
 /*About Page Skills */
 router.post('/manage_about_skills',mywebsiteController.manage_about_skills);
+/*Service Page Title */
+router.post('/manage_service_title',mywebsiteController.manage_service_title);
+/*Service Page Intro */
+router.post('/manage_service_intro',mywebsiteController.manage_service_intro);
+/*Service Page Services */
+router.post('/manage_service_services',mywebsiteController.manage_service_services);
+/*Education_Experience Page Title */
+router.post('/manage_education_experience_title',mywebsiteController.manage_education_experience_title);
+/*Education_Experience Page Intro */
+router.post('/manage_education_experience_intro',mywebsiteController.manage_education_experience_intro);
+/*Educations */
+router.post('/manage_educations',mywebsiteController.manage_educations);
+/*Experience */
+router.post('/manage_experiences',mywebsiteController.manage_experiences);
 module.exports=router;
