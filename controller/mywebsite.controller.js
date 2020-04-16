@@ -532,4 +532,144 @@ myWebsiteObject.manage_experiences=function(req,res){
 
 }
 
+/*Add Work Page Title */
+myWebsiteObject.manage_work_title=function(req,res){
+    var portfolio_data_title=req.body.portfolio_data_title;
+    var obj={
+             'portfolio_data_title':portfolio_data_title,
+         }
+    MySchema.websiteInfo.findOne({}).select('work').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'work':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'work.portfolio_data_title':portfolio_data_title}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Work Page Title */
+myWebsiteObject.manage_work_intro=function(req,res){
+    var portfolio_data_intro=req.body.portfolio_data_intro;
+    var obj={
+             'portfolio_data_intro':portfolio_data_intro,
+         }
+    MySchema.websiteInfo.findOne({}).select('work').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'work':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'work.portfolio_data_intro':portfolio_data_intro}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Work Set */
+myWebsiteObject.manage_work_addworks=function(req,res){
+    var works_set=req.body.works_set;
+    var obj={
+             'works_set':works_set,
+         }
+    MySchema.websiteInfo.findOne({}).select('work').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'work':obj,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$push:{'work.works_set':works_set}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+/*Add Website Logo */
+myWebsiteObject.manage_website_logo=function(req,res){
+    var website_logo=req.body.website_logo;
+    MySchema.websiteInfo.findOne({}).select('website_logo').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'website_logo':website_log,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'website_logo':website_logo}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+/*Add Website footer_data */
+myWebsiteObject.manage_footer_data=function(req,res){
+    var footer_data=req.body.footer_data;
+
+    MySchema.websiteInfo.findOne({}).select('footer_data').then((response)=>{
+        if(response==null){
+            var data=new MySchema.websiteInfo({
+                'footer_data':footer_data,
+            })
+            data.save().then((resp)=>{
+                res.json({status:200,success:true,message:'Successfully Added',data:resp})
+            }).catch((error)=>{
+                res.json({status:200,success:false,message:error,data:''})
+            })
+        }else{
+            MySchema.websiteInfo.update({},{$set:{'footer_data':footer_data}}).then((updtRes)=>{
+                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+            }).catch((upftError)=>{
+                res.json({status:200,success:false,message:upftError,data:''})
+            })
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+
+}
+
+
 module.exports=myWebsiteObject;

@@ -36,4 +36,14 @@ router.post('/manage_education_experience_intro',mywebsiteController.manage_educ
 router.post('/manage_educations',mywebsiteController.manage_educations);
 /*Experience */
 router.post('/manage_experiences',mywebsiteController.manage_experiences);
+/*Work/Portfolio Title */
+router.post('/manage_work_title',mywebsiteController.manage_work_title);
+/*Work/Portfolio Intro */
+router.post('/manage_work_intro',mywebsiteController.manage_work_intro);
+/*Work/Portfolio Works */
+router.post('/manage_work_addworks',mywebsiteController.manage_work_addworks);
+/*Website Logo */
+router.post('/manage_website_logo',mywebsiteController.manage_website_logo);
+/*Footer */
+router.post('/manage_footer_data',mywebsiteController.manage_footer_data);
 module.exports=router;

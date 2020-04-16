@@ -34,7 +34,12 @@ var experinceSet=new mongoose.Schema({
 var workImage=new mongoose.Schema({
     image_url:{type:String},
 });
-
+/*Work Sets */
+var workSet=new mongoose.Schema({
+    bg_image:{type:String},
+    project_name:{type:String},
+    project_url:{type:String},
+    slide_image:[workImage]})
 /*Home Schema */
 var home_data=new mongoose.Schema({
     welcome_title:{type:String},
@@ -72,10 +77,7 @@ var education_experience_data=new mongoose.Schema({
 var portfolio_data=new mongoose.Schema({
     portfolio_data_title:{type:String},
     portfolio_data_intro:{type:String},
-    bg_image:{type:String},
-    project_name:{type:String},
-    project_url:{type:String},
-    slide_image:[workImage]
+    works_set:[workSet]
 });
 /*Social Icons */
 var social_icons=new mongoose.Schema({
