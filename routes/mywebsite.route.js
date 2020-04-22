@@ -46,4 +46,8 @@ router.post('/manage_work_addworks',mywebsiteController.manage_work_addworks);
 router.post('/manage_website_logo',mywebsiteController.manage_website_logo);
 /*Footer */
 router.post('/manage_footer_data',mywebsiteController.manage_footer_data);
+/*Website All Info */
+router.get('/get_all_info',mywebsiteController.getAllInfo);
+/*Delete Work*/
+router.post('/delete_work',mywebsiteController.deleteWork);
 module.exports=router;

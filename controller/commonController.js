@@ -31,8 +31,9 @@ commonController.upload_image=function(req,res){
                     return res.status(400).send({
                         message: helper.getErrorMessage(err)
                     });
+                  console.log(err);
                 }
-                //console.log(req.file);
+                console.log(req.file);
                 var mediaName= req.file.filename;
                 var mediaSource= 'http://' + req.headers.host + '/images/' +date.year()+'/'+date.month()+'/'+ mediaName;
                 var gallery=new commomModel.Gallery({
@@ -58,12 +59,12 @@ commonController.upload_image=function(req,res){
       }).catch((error) => {
         console.log(`Problem creating directory: ${error.message}`)
       });
-    
+
 }
 
 /*Multiple Image Upload */
 commonController.multiple_image_upload=async function(req,res){
-    
+
 
     library.createDirectory(dir_name).then(async (path) => {
         library.createDirectory(dir_name2).then(async (path2)=>{
@@ -80,7 +81,7 @@ commonController.multiple_image_upload=async function(req,res){
                 var allImage=await library.multipleImageValue(req,date,allFiles);
                 console.log('-----------controller',allImage);
                 res.json({message:"Successfully file uploaded",files:allImage});
-                
+
             });
 
             console.log(`Successfully created directory: '${path2}'`);

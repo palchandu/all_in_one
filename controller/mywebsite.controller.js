@@ -8,7 +8,7 @@ myWebsiteObject.manage_social_icons=(req,res)=>{
    var twitter=req.body.twitter;
    var youtube=req.body.youtube;
    var obj={
-            'facbook':facebook,
+            'facebook':facebook,
             'linkedin':linkedin,
             'twitter':twitter,
             'youtube':youtube
@@ -561,7 +561,7 @@ myWebsiteObject.manage_work_title=function(req,res){
 
 }
 
-/*Add Work Page Title */
+/*Add Work Page Intro */
 myWebsiteObject.manage_work_intro=function(req,res){
     var portfolio_data_intro=req.body.portfolio_data_intro;
     var obj={
@@ -593,29 +593,45 @@ myWebsiteObject.manage_work_intro=function(req,res){
 /*Add Work Set */
 myWebsiteObject.manage_work_addworks=function(req,res){
     var works_set=req.body.works_set;
-    var obj={
-             'works_set':works_set,
-         }
-    MySchema.websiteInfo.findOne({}).select('work').then((response)=>{
-        if(response==null){
-            var data=new MySchema.websiteInfo({
-                'work':obj,
-            })
-            data.save().then((resp)=>{
-                res.json({status:200,success:true,message:'Successfully Added',data:resp})
-            }).catch((error)=>{
-                res.json({status:200,success:false,message:error,data:''})
-            })
-        }else{
-            MySchema.websiteInfo.update({},{$push:{'work.works_set':works_set}}).then((updtRes)=>{
-                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
-            }).catch((upftError)=>{
-                res.json({status:200,success:false,message:upftError,data:''})
-            })
-        }
-    }).catch((error)=>{
-        res.json({status:200,success:false,message:error,data:''})
-    })
+    var work_id=req.body.work_id;
+    if(work_id==''){
+      var obj={
+               'works_set':works_set,
+           }
+      MySchema.websiteInfo.findOne({}).select('work').then((response)=>{
+          if(response==null){
+              var data=new MySchema.websiteInfo({
+                  'work':obj,
+              })
+              data.save().then((resp)=>{
+                  res.json({status:200,success:true,message:'Successfully Added',data:resp})
+              }).catch((error)=>{
+                  res.json({status:200,success:false,message:error,data:''})
+              })
+          }else{
+              MySchema.websiteInfo.update({},{$push:{'work.works_set':works_set}}).then((updtRes)=>{
+                  res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
+              }).catch((upftError)=>{
+                  res.json({status:200,success:false,message:upftError,data:''})
+              })
+          }
+      }).catch((error)=>{
+          res.json({status:200,success:false,message:error,data:''})
+      })
+    }else{
+      var condition={"work.works_set._id":work_id};
+      var updt_data={"work.works_set.$.bg_image":works_set.bg_image,
+                "work.works_set.$.project_name":works_set.project_name,
+                "work.works_set.$.project_url":works_set.project_url,
+                "work.works_set.$.slide_image":works_set.slide_image
+              }
+      MySchema.websiteInfo.findOneAndUpdate(condition,{$set:updt_data}).exec().then((resp)=>{
+            res.json({status:200,success:true,message:'Successfully Updated',data:resp})
+        }).catch((error)=>{
+            res.json({status:200,success:false,message:error,data:''})
+        })
+    }
+
 
 }
 
@@ -671,5 +687,30 @@ myWebsiteObject.manage_footer_data=function(req,res){
 
 }
 
-
+/*Get Website Info*/
+myWebsiteObject.getAllInfo=function(req,res){
+    MySchema.websiteInfo.findOne({}).then((response)=>{
+        if(response!=null){
+            res.json({status:200,success:true,message:'Data Found.',data:response})
+        }else{
+            res.json({status:200,success:false,message:'No Data Found.',data:''})
+        }
+    }).catch((error)=>{
+        res.json({status:200,success:false,message:error,data:''})
+    })
+}
+/*Delete Work */
+myWebsiteObject.deleteWork=function(req,res){
+  var wid=req.body.wid;
+  console.log(wid);
+  MySchema.websiteInfo.updateOne({},{$pull:{'work.works_set':{'_id':{$eq:wid}}}}).then((response)=>{
+      if(response!=null){
+          res.json({status:200,success:true,message:'Work Deleted Successfully',data:''})
+      }else{
+          res.json({status:200,success:false,message:'Someting Wrong.',data:''})
+      }
+  }).catch((error)=>{
+      res.json({status:200,success:false,message:error,data:''})
+  })
+}
 module.exports=myWebsiteObject;

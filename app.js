@@ -44,7 +44,7 @@ app.use('/v2/category',middleware.validRequest,category);
 app.use('/v2/posts_comments',middleware.validRequest,postComment);
 app.use('/v2/pdf_creation',middleware.validRequest,pdf_val);
 app.use('/v2/common',commonRouter);
-app.use('/v2/mywebsite',mywebsite);
+app.use('/v2/mywebsite',middleware.validRequest,mywebsite);
 var port=8900;
 app.listen(port,()=>{
     console.log('Application running on port '+port);
