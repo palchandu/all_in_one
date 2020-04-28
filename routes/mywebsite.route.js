@@ -50,4 +50,10 @@ router.post('/manage_footer_data',mywebsiteController.manage_footer_data);
 router.get('/get_all_info',mywebsiteController.getAllInfo);
 /*Delete Work*/
 router.post('/delete_work',mywebsiteController.deleteWork);
+/*Delete Education*/
+router.post('/delete_education',mywebsiteController.deleteEducation);
+/*Delete Experince*/
+router.post('/delete_experience',mywebsiteController.deleteExperience);
+/*Delete Service*/
+router.post('/delete_service',mywebsiteController.deleteService);
 module.exports=router;

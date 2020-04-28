@@ -8,4 +8,5 @@ router.post('/upload',commonController.upload_image);
 router.post('/upload_multiple',commonController.multiple_image_upload);
 router.get('/images',commonController.getImage);
 router.get('/images/:id',commonController.getSingleImage);
+router.post('/upload_document',commonController.upload_document);
 module.exports=router;

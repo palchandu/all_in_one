@@ -41,11 +41,19 @@ var mywebsite=new Schema({
 })
 
 var websiteInfo=mongoose.model('websiteinfo',mywebsite);
+/*Document Schema*/
+var documentSchema=new Schema({
+    documentName:{ type:String,required:true},
+    documentPath:{ type:String,required:true},
+    meta_data:subDocs.meta_data
+});
+var document_store=mongoose.model('document_store',documentSchema);
+
 module.exports={
     metaData:metaData,
     states:states,
     cities:cities,
     Gallery:Gallery,
-    websiteInfo:websiteInfo
+    websiteInfo:websiteInfo,
+    document_store:document_store
 }
-

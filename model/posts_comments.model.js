@@ -14,7 +14,8 @@ var postSchema=new mongoose.Schema({
     post_category:[{type:mongoose.Schema.ObjectId,ref:'category'}],
     comments:[commentSchema],
     posted_by:{type:mongoose.Schema.Types.ObjectId,ref:'Users'},
-    meta_data:MetaData.meta_data
+    meta_data:MetaData.meta_data,
+    featured_image:{type:String}
 });
 
 

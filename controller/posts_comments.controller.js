@@ -12,13 +12,19 @@ post_comment_controller.post_blog=(req,res)=>{
     var title=req.body.title;
     var category=req.body.category;
     var titleSlug=title.split(' ').join('_');
+    if(req.body.featured_image!=null){
+        var featured_image=req.body.featured_image;
+    }else{
+        var featured_image='https://dummyimage.com/600x400/000/fff&text=GetWebSoftware';
+    }
     var postData=new PostComment({
         title:title,
         title_slug:titleSlug,
         post_content:req.body.post_content,
         post_category:category,
         posted_by:req.body.uid,
-        meta_data:{"created_by":req.body.uid}
+        meta_data:{"created_by":req.body.uid},
+        featured_image:featured_image
     });
     PostComment.find({"title_slug":titleSlug}).count().exec().then((response)=>{
         if(response==0){
@@ -93,7 +99,8 @@ post_comment_controller.allPosts=(req,res)=>{
         res.status(200).json({success:true,message:"Post Details.",data:objectArray});
         //res.json(reponse)
     }).catch((error)=>{
-        res.status(400).json({message:error});
+        console.log(error);
+        res.status(200).json({success:false,message:error,data:''});
     })
 }
 post_comment_controller.fetchSinglePost=(req,res)=>{

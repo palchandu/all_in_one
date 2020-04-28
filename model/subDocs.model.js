@@ -43,16 +43,15 @@ var workSet=new mongoose.Schema({
 /*Home Schema */
 var home_data=new mongoose.Schema({
     welcome_title:{type:String},
-    animated_text:[animatedtext],
     cv_url:{type:String},
-    background_image:{type:String}
+    background_image:{type:String},
+    animated_text:[animatedtext]
 });
 
 /*About Schema */
 var about_data=new mongoose.Schema({
     about_title:{type:String},
     about_intro:{type:String},
-    working_area:[{type:String}],
     about_details:{type:String},
     skills_percent:[skillsPercent]
 });

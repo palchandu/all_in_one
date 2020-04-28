@@ -67,11 +67,9 @@ myWebsiteObject.manage_home_title=function(req,res){
 }
 /*Add Home Page Animated text */
 myWebsiteObject.manage_home_animated_text=function(req,res){
-    var animated_text=req.body.text_name;
-    var text_delay=req.body.text_delay;
+    var animated=req.body.animated;
     var obj={
-             'text_name':animated_text,
-             'text_delay':text_delay
+          'animated_text':animated
          }
     MySchema.websiteInfo.findOne({}).select('home').then((response)=>{
         if(response==null){
@@ -84,7 +82,7 @@ myWebsiteObject.manage_home_animated_text=function(req,res){
                 res.json({status:200,success:false,message:error,data:''})
             })
         }else{
-            MySchema.websiteInfo.update({},{$push:{'home.animated_text':obj}}).then((updtRes)=>{
+            MySchema.websiteInfo.update({},{$set:{'home.animated_text':animated}}).then((updtRes)=>{
                 res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
             }).catch((upftError)=>{
                 res.json({status:200,success:false,message:upftError,data:''})
@@ -155,11 +153,12 @@ myWebsiteObject.manage_home_bg=function(req,res){
 }
 
 /*Add About Page Intro */
-myWebsiteObject.manage_about_title=function(req,res){
+myWebsiteObject.manage_about_intro=function(req,res){
     var about_intro=req.body.about_intro;
     var obj={
              'about_intro':about_intro,
          }
+    console.log(obj);
     MySchema.websiteInfo.findOne({}).select('about').then((response)=>{
         if(response==null){
             var data=new MySchema.websiteInfo({
@@ -184,11 +183,12 @@ myWebsiteObject.manage_about_title=function(req,res){
 }
 
 /*Add About Page Title */
-myWebsiteObject.manage_about_intro=function(req,res){
+myWebsiteObject.manage_about_title=function(req,res){
     var about_title=req.body.about_title;
     var obj={
              'about_title':about_title,
          }
+    console.log(obj);
     MySchema.websiteInfo.findOne({}).select('about').then((response)=>{
         if(response==null){
             var data=new MySchema.websiteInfo({
@@ -200,7 +200,7 @@ myWebsiteObject.manage_about_intro=function(req,res){
                 res.json({status:200,success:false,message:error,data:''})
             })
         }else{
-            MySchema.websiteInfo.update({},{$set:{'about.about_title':about_intro}}).then((updtRes)=>{
+            MySchema.websiteInfo.update({},{$set:{'about.about_title':about_title}}).then((updtRes)=>{
                 res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
             }).catch((upftError)=>{
                 res.json({status:200,success:false,message:upftError,data:''})
@@ -213,34 +213,7 @@ myWebsiteObject.manage_about_intro=function(req,res){
 }
 
 
-/*Add About Page Intro */
-myWebsiteObject.manage_about_intro=function(req,res){
-    var about_intro=req.body.about_intro;
-    var obj={
-             'about_intro':about_intro,
-         }
-    MySchema.websiteInfo.findOne({}).select('about').then((response)=>{
-        if(response==null){
-            var data=new MySchema.websiteInfo({
-                'about':obj,
-            })
-            data.save().then((resp)=>{
-                res.json({status:200,success:true,message:'Successfully Added',data:resp})
-            }).catch((error)=>{
-                res.json({status:200,success:false,message:error,data:''})
-            })
-        }else{
-            MySchema.websiteInfo.update({},{$set:{'about.about_intro':about_intro}}).then((updtRes)=>{
-                res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
-            }).catch((upftError)=>{
-                res.json({status:200,success:false,message:upftError,data:''})
-            })
-        }
-    }).catch((error)=>{
-        res.json({status:200,success:false,message:error,data:''})
-    })
 
-}
 
 /*Add About Page Working Area */
 myWebsiteObject.manage_about_working_area=function(req,res){
@@ -317,7 +290,7 @@ myWebsiteObject.manage_about_skills=function(req,res){
                 res.json({status:200,success:false,message:error,data:''})
             })
         }else{
-            MySchema.websiteInfo.update({},{$push:{'about.skills_percent':skills_percent}}).then((updtRes)=>{
+            MySchema.websiteInfo.update({},{$set:{'about.skills_percent':skills_percent}}).then((updtRes)=>{
                 res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
             }).catch((upftError)=>{
                 res.json({status:200,success:false,message:upftError,data:''})
@@ -491,7 +464,7 @@ myWebsiteObject.manage_educations=function(req,res){
                 res.json({status:200,success:false,message:error,data:''})
             })
         }else{
-            MySchema.websiteInfo.update({},{$set:{'education_experience.education_set':educations}}).then((updtRes)=>{
+            MySchema.websiteInfo.update({},{$push:{'education_experience.education_set':educations}}).then((updtRes)=>{
                 res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
             }).catch((upftError)=>{
                 res.json({status:200,success:false,message:upftError,data:''})
@@ -520,7 +493,7 @@ myWebsiteObject.manage_experiences=function(req,res){
                 res.json({status:200,success:false,message:error,data:''})
             })
         }else{
-            MySchema.websiteInfo.update({},{$set:{'education_experience.experience_set':experiences}}).then((updtRes)=>{
+            MySchema.websiteInfo.update({},{$push:{'education_experience.experience_set':experiences}}).then((updtRes)=>{
                 res.json({status:200,success:true,message:'Successfully Updated',data:updtRes})
             }).catch((upftError)=>{
                 res.json({status:200,success:false,message:upftError,data:''})
@@ -713,4 +686,48 @@ myWebsiteObject.deleteWork=function(req,res){
       res.json({status:200,success:false,message:error,data:''})
   })
 }
+
+/*Delete Education */
+myWebsiteObject.deleteEducation=function(req,res){
+  var eid=req.body.eid;
+  MySchema.websiteInfo.updateOne({},{$pull:{'education_experience.education_set':{'_id':{$eq:eid}}}}).then((response)=>{
+      if(response!=null){
+          res.json({status:200,success:true,message:'Education Deleted Successfully',data:''})
+      }else{
+          res.json({status:200,success:false,message:'Someting Wrong.',data:''})
+      }
+  }).catch((error)=>{
+      res.json({status:200,success:false,message:error,data:''})
+  })
+}
+
+/*Delete Experince */
+myWebsiteObject.deleteExperience=function(req,res){
+  var eid=req.body.eid;
+  MySchema.websiteInfo.updateOne({},{$pull:{'education_experience.experience_set':{'_id':{$eq:eid}}}}).then((response)=>{
+      if(response!=null){
+          res.json({status:200,success:true,message:'Experience Deleted Successfully',data:''})
+      }else{
+          res.json({status:200,success:false,message:'Someting Wrong.',data:''})
+      }
+  }).catch((error)=>{
+      res.json({status:200,success:false,message:error,data:''})
+  })
+}
+
+/*Delete Education */
+myWebsiteObject.deleteService=function(req,res){
+  var sid=req.body.sid;
+  MySchema.websiteInfo.updateOne({},{$pull:{'service.service_set':{'_id':{$eq:sid}}}}).then((response)=>{
+      if(response!=null){
+          res.json({status:200,success:true,message:'Service Deleted Successfully',data:''})
+      }else{
+          res.json({status:200,success:false,message:'Someting Wrong.',data:''})
+      }
+  }).catch((error)=>{
+      res.json({status:200,success:false,message:error,data:''})
+  })
+}
+
+
 module.exports=myWebsiteObject;
