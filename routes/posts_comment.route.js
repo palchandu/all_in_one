@@ -16,7 +16,7 @@ body('post_id').notEmpty().withMessage('Post id can not be empty').trim()
 /*Posts List */
 Routes.get('/all_posts',postCommentController.allPosts);
 /*SIngle Post */
-Routes.get('/post_detail/:title',postCommentController.fetchSinglePost);
+Routes.get('/post_detail/:title/:post_id',postCommentController.fetchSinglePost);
 /*Update post */
 Routes.post('/post_update',postCommentController.update_post);
 /*Delete Post */
@@ -28,4 +28,8 @@ body('post_id').notEmpty().withMessage('Post id can not be empty').trim()
 ],postCommentController.update_comment);
 /*Delete Comment */
 Routes.post('/delete_comment',postCommentController.delete_comment);
+/*Post List Short*/
+Routes.get('/post_listing_short',postCommentController.allPostsListing);
+/*Latest Posts List */
+Routes.get('/latest_posts',postCommentController.latestPosts);
 module.exports=Routes;

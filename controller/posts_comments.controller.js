@@ -1,9 +1,11 @@
 var async=require('async');
+var htmlToText = require('html-to-text');
 const { body,sanitizeBody,validationResult } = require('express-validator');
 var PostComment=require('../model/posts_comments.model');
 var moment=require('moment');
 var post_comment_controller={};
 var ObjectId = require('mongodb').ObjectID;
+var categoryController=require('../controller/category.controller');
 post_comment_controller.post_blog=(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -57,7 +59,7 @@ post_comment_controller.add_comment=(req,res)=>{
             }else{
                 res.status(200).json({status:200,message:"You have commented successfully",data:resp});
             }
-            
+
         }).catch((error)=>{
             res.status(400).json({status:400,message:error});
         })
@@ -94,7 +96,7 @@ post_comment_controller.allPosts=(req,res)=>{
             objectData.post_category=element.post_category;
             objectData.comments=element.comments;
             objectArray.push(objectData);
-            
+
         }
         res.status(200).json({success:true,message:"Post Details.",data:objectArray});
         //res.json(reponse)
@@ -105,11 +107,12 @@ post_comment_controller.allPosts=(req,res)=>{
 }
 post_comment_controller.fetchSinglePost=(req,res)=>{
     var title=req.params.title;
+    var post_id=req.params.post_id;
     console.log('==0988',title);
     if(title!=undefined && title!=''){
     var titleSlug=title.split(' ').join('_');
     console.log('Slug',titleSlug);
-    var condition={"meta_data.deleted":"N","title_slug":titleSlug};
+    var condition={"meta_data.deleted":"N",$or: [ { "_id":post_id }, { "title_slug":titleSlug } ] };
     async.waterfall([
             function(callback){
                 PostComment.findOne(condition,{"_id":1,"comments":1}).exec().then((resp)=>{
@@ -117,12 +120,13 @@ post_comment_controller.fetchSinglePost=(req,res)=>{
                     if(resp!=null){
                         callback('',resp);
                     }else{
-                        callback('Post Not Found','.');
+                        console.log('========');
+                        callback('',post_id);
                     }
                 }).catch((error)=>{
                     callback(error,'');
                 })
-                
+
             },
             function(arg,callback){
                 if(arg!=null && arg!=undefined){
@@ -133,9 +137,9 @@ post_comment_controller.fetchSinglePost=(req,res)=>{
                    }else{
                     var post_cond={"_id":arg._id};
                    }
-                    
+
                     console.log(post_cond);
-                    PostComment.findOne(post_cond).exec().then((reponse)=>{
+                    PostComment.findOne(post_cond).populate('post_category').populate('meta_data.created_by').exec().then((reponse)=>{
                         console.log('oiuyy',reponse.comments.length)
                         var sortedComment=reponse.comments.sort( function ( a, b ) { return b.meta_data.created - a.meta_data.created; } );
                         reponse.comments=sortedComment;
@@ -157,7 +161,7 @@ post_comment_controller.fetchSinglePost=(req,res)=>{
                 }else{
                     callback('Something Wrong1','');
                 }
-                
+
             }
         ],
         (error,response)=>{
@@ -211,7 +215,7 @@ post_comment_controller.delete_post=(req,res)=>{
 }
 
 post_comment_controller.update_comment=(req,res)=>{
-  
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -243,6 +247,82 @@ post_comment_controller.delete_comment=(req,res)=>{
     })
 }
 
+post_comment_controller.allPostsListing=async (req,res)=>{
+   var condition={"meta_data.deleted":"N"};
+    if(req.query.search && req.query.search!=null){
+      var key=req.query.search;
+      var condition={"meta_data.deleted":"N","title": { $regex: '.*' + key + '.*' }};
+    }
+    if(req.query.category && req.query.category!=null){
 
+      var key=await categoryController.category_id_byname(req.query.category);
+      if(key!=null){
+        var condition={"meta_data.deleted":"N","post_category":key };
+      }else{
+        var condition={"meta_data.deleted":"N"};
+      }
+      
+    }
+
+    PostComment.find(condition).populate('post_category').populate('meta_data.created_by').sort({'meta_data.created': -1}).then((reponse)=>{
+        var objectArray=[];
+        for (let index = 0; index < reponse.length; index++) {
+            var objectData={};
+            var element = reponse[index];
+            var createdDt=moment.unix(element.meta_data.created).format("DD-MM-YYYY")
+            var post_text=element.post_content;
+            post_text=post_text.substring(0,300);
+            var myCates=[];
+            for(data in element.post_category){
+              myCates.push(element.post_category[data].name);
+            }
+
+            var cats=myCates.join();
+            objectData._id=element._id;
+            objectData.title=element.title;
+            objectData.short_text=post_text;
+            objectData.created_by=element.meta_data.created_by.fullname;
+            objectData.created_date=createdDt;
+            objectData.categories=cats;
+            //objectData.categories='About';
+            objectData.featured_image=element.featured_image;
+            objectArray.push(objectData);
+        }
+        console.log(objectArray);
+        res.status(200).json({success:true,message:"Post Details.",data:objectArray});
+        //res.json(reponse)
+    }).catch((error)=>{
+        console.log(error);
+        res.status(200).json({success:false,message:error,data:''});
+    })
+}
+
+post_comment_controller.latestPosts=(req,res)=>{
+    var condition={"meta_data.deleted":"N"};
+    PostComment.find(condition).sort({'meta_data.created': -1}).limit(3).then((reponse)=>{
+        var objectArray=[];
+        for (let index = 0; index < reponse.length; index++) {
+            var objectData={};
+            var element = reponse[index];
+            console.log(element)
+            var createdDt=moment.unix(element.meta_data.created).format("DD-MM-YYYY")
+            objectData._id=element._id;
+            objectData.title=element.title;
+            objectData.post_content=element.post_content;
+            objectData.created_by=element.meta_data.created_by.fullname;
+            objectData.created=createdDt;
+            objectData.post_category=element.post_category;
+            objectData.comments=element.comments;
+            objectData.featured_image=element.featured_image;
+            objectArray.push(objectData);
+
+        }
+        res.status(200).json({success:true,message:"Post Details.",data:objectArray});
+        //res.json(reponse)
+    }).catch((error)=>{
+        console.log(error);
+        res.status(200).json({success:false,message:error,data:''});
+    })
+}
 
 module.exports=post_comment_controller;

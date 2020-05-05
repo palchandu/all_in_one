@@ -32,7 +32,7 @@ categoryController.add_category=(req,res)=>{
 categoryController.category_list=(req,res)=>{
     try{
         var condition={"meta_data.deleted":"N"};
-  
+
         if(typeof req.query.category !== 'undefined' && req.query.category){
             var catVal=req.query.category;
             condition.slug=catVal.replace(" ","_").toLowerCase();
@@ -50,7 +50,7 @@ categoryController.category_list=(req,res)=>{
 categoryController.remove_category=(req,res)=>{
     try{
         var condition={"meta_data.deleted":"N"};
-  
+
         if(typeof req.params.category !== 'undefined' && req.params.category){
             var catVal=req.params.category;
             condition.slug=catVal.replace(" ","_").toLowerCase();
@@ -62,7 +62,7 @@ categoryController.remove_category=(req,res)=>{
         }else{
             res.status(200).json({status:200,success:false,message:"Please Select category to delete"});
         }
-        
+
     }catch(ex){
         res.status(2000).json({status:200,success:false,message:ex});
     }
@@ -86,5 +86,20 @@ categoryController.update_category=(req,res)=>{
         res.status(200).json({status:200,success:false,message:ex});
     }
 }
+
+categoryController.category_id_byname=(category_name)=>{
+    return new Promise((resolve,reject)=>{
+        var condition={"meta_data.deleted":"N","name":category_name};
+        console.log(condition)
+        categoryModel.findOne(condition).select('_id').exec().then((categs)=>{
+            resolve(categs._id)
+
+        }).catch((categs_error)=>{
+            reject(null)
+        })
+    });
+
+}
+
 
 module.exports=categoryController;

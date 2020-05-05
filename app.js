@@ -32,6 +32,7 @@ var postComment=require('./routes/posts_comment.route');
 var pdf_val=require('./routes/pdf.routes');
 var commonRouter=require('./routes/common');
 var mywebsite=require('./routes/mywebsite.route');
+var contacts=require('./routes/contact.route');
 /*use the module */
 app.use(bodyparser.urlencoded({ limit: '50mb',extended: true }));
 app.use(bodyparser.json({limit: '50mb',extended: true}));
@@ -45,6 +46,7 @@ app.use('/v2/posts_comments',middleware.validRequest,postComment);
 app.use('/v2/pdf_creation',middleware.validRequest,pdf_val);
 app.use('/v2/common',commonRouter);
 app.use('/v2/mywebsite',middleware.validRequest,mywebsite);
+app.use('/v2/contact',contacts);
 var port=8900;
 app.listen(port,()=>{
     console.log('Application running on port '+port);
