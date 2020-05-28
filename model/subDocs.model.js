@@ -39,7 +39,9 @@ var workSet=new mongoose.Schema({
     bg_image:{type:String},
     project_name:{type:String},
     project_url:{type:String},
-    slide_image:[workImage]})
+    slide_image:[workImage],
+    project_description:{type:String}
+})
 /*Home Schema */
 var home_data=new mongoose.Schema({
     welcome_title:{type:String},

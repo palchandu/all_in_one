@@ -283,7 +283,7 @@ post_comment_controller.allPostsListing=async (req,res)=>{
             objectData.short_text=post_text;
             objectData.created_by=element.meta_data.created_by.fullname;
             objectData.created_date=createdDt;
-            objectData.categories=cats;
+            objectData.categories=element.post_category;
             //objectData.categories='About';
             objectData.featured_image=element.featured_image;
             objectArray.push(objectData);
